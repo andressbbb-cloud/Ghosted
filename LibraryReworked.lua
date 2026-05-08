@@ -31,7 +31,7 @@ local Library = {
     FontColor = Color3.fromRGB(118, 118, 118);
     FontColor2 = Color3.fromRGB(198, 198, 198);
     MainColor = Color3.fromRGB(11, 11, 11);
-    MainColor2 = Color3.fromRGB(23, 23, 23);
+    SelectedTabColor = Color3.fromRGB(23, 23, 23);
     BackgroundColor = Color3.fromRGB(15, 15, 15);
     AccentColor = Color3.fromRGB(93, 88, 157);
     OutlineColor = Color3.fromRGB(25, 25, 25);
@@ -1543,19 +1543,6 @@ do
         Toggle.Container = Container;
         setmetatable(Toggle, BaseAddons);
 
-        if Info.Callback then
-            Toggle.Changed = Info.Callback;
-            -- Only fire immediately if Default is true, to avoid calling
-            -- uninitialized functions (e.g. StopFly) that are defined later
-            if Toggle.Value then
-                task.defer(function()
-                    if Toggle.Changed then
-                        Toggle.Changed(Toggle.Value);
-                    end;
-                end);
-            end;
-        end;
-
         Toggles[Idx] = Toggle;
 
         return Toggle;
@@ -2188,7 +2175,7 @@ do
 
     local WatermarkOuter = Library:Create('Frame', {
         BorderColor3 = Color3.new(0, 0, 0);
-        Position = UDim2.new(0, 100, 0, 10);
+        Position = UDim2.new(0, 160, 0, -30);
         Size = UDim2.new(0, 213, 0, 20);
         ZIndex = 200;
         Visible = false;
@@ -2327,7 +2314,7 @@ end;
 
 function Library:SetWatermark(Text)
     local X, Y = Library:GetTextBounds(Text, Enum.Font.Code, 14);
-    Library.Watermark.Size = UDim2.new(0, X + 14, 0, 24);
+    Library.Watermark.Size = UDim2.new(0, 262, 0, 24);
 
     Library.WatermarkText.Text = Text;
 end;
@@ -2603,7 +2590,7 @@ function Library:CreateWindow(...)
         });
 
         local Blocker = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor2;
+            BackgroundColor3 = Library.SelectedTabColor;
             BorderSizePixel = 0;
             Position = UDim2.new(0, 0, 1, 0);
             Size = UDim2.new(1, 0, 0, 1);
@@ -2613,7 +2600,7 @@ function Library:CreateWindow(...)
         });
 
         Library:AddToRegistry(Blocker, {
-            BackgroundColor3 = 'MainColor2';
+            BackgroundColor3 = 'SelectedTabColor';
         });
 
         local TabFrame = Library:Create('Frame', {
@@ -2626,34 +2613,21 @@ function Library:CreateWindow(...)
             Parent = TabContainer;
         });
 
-        local LeftSide = Library:Create('ScrollingFrame', {
+        local LeftSide = Library:Create('Frame', {
             BackgroundTransparency = 1;
             Position = UDim2.new(0, 8, 0, 8);
-            Size = UDim2.new(0.5, -12, 1, -16);
-            CanvasSize = UDim2.new(0, 0, 0, 0);
-            AutomaticCanvasSize = Enum.AutomaticSize.Y;
-            ScrollBarThickness = 3;
-            ScrollBarImageColor3 = Library.AccentColor;
-            BorderSizePixel = 0;
+            Size = UDim2.new(0.5, -12, 0, 507);
             ZIndex = 2;
             Parent = TabFrame;
         });
 
-        local RightSide = Library:Create('ScrollingFrame', {
+        local RightSide = Library:Create('Frame', {
             BackgroundTransparency = 1;
             Position = UDim2.new(0.5, 4, 0, 8);
-            Size = UDim2.new(0.5, -12, 1, -16);
-            CanvasSize = UDim2.new(0, 0, 0, 0);
-            AutomaticCanvasSize = Enum.AutomaticSize.Y;
-            ScrollBarThickness = 3;
-            ScrollBarImageColor3 = Library.AccentColor;
-            BorderSizePixel = 0;
+            Size = UDim2.new(0.5, -12, 0, 507);
             ZIndex = 2;
             Parent = TabFrame;
         });
-
-        Library:AddToRegistry(LeftSide, { ScrollBarImageColor3 = 'AccentColor' });
-        Library:AddToRegistry(RightSide, { ScrollBarImageColor3 = 'AccentColor' });
 
         Library:Create('UIListLayout', {
             Padding = UDim.new(0, 8);
@@ -2676,12 +2650,12 @@ function Library:CreateWindow(...)
 
             TabFrame.Visible = true;
             Blocker.BackgroundTransparency = 0;
-            TabButton.BackgroundColor3 = Library.MainColor2;
+            TabButton.BackgroundColor3 = Library.SelectedTabColor;
             TabButtonLabel.TextColor3 = Library.AccentColor;
             Highlight.BackgroundColor3 = Library.AccentColor;
             Highlight.ZIndex = 3;
             Highlight.Visible = true;
-            Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'MainColor2';
+            Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'SelectedTabColor';
             TabFrame.Visible = true;
         end;
 
